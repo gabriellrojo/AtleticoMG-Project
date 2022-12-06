@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import theme from "./theme";
+import { ThemeProvider } from "styled-components"
+import { createGlobalStyle } from "styled-components";
+import Footer from "./components/Footer";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+
+const GlobalStyle = createGlobalStyle`
+  * {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  }
+`
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Header />
+        <h1>Olá React</h1>
+        <Routes>
+        </Routes>
+        <Footer />
+      </ThemeProvider>
+      </BrowserRouter>
+    </>
   );
 }
 
