@@ -4,6 +4,8 @@ import { createGlobalStyle } from "styled-components";
 import Footer from "./components/Footer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
+import Home from "./pages/Home";
+import Historia from "./pages/Historia";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -23,8 +25,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Header />
-        <h1>Olá React</h1>
         <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="/historia" element={<Historia/>}/>
         </Routes>
         <Footer />
       </ThemeProvider>
