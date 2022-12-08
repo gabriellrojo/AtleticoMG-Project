@@ -6,9 +6,9 @@ import betano from "../assets/imgs/logobetano.png"
 import brahma from "../assets/imgs/logobrahma.png"
 
 const Foot = styled.div`
-    position: fixed;
+    position: absolute;
     min-height: 15vh;
-    max-width: 100vw;
+    min-width: 100vw;
     background-color: ${props => props.theme.colors.bgfooterday};
 `
 
@@ -23,7 +23,7 @@ const Container = styled.div`
 
   @keyframes patrocinadores {
     from {
-      right: -600px; 
+      right: -600px;
     } to {
       right: 450px;
     }
@@ -41,6 +41,7 @@ const Patrocinadores1 = styled.img`
   max-height: 120px;
   max-width: 120px;
   margin-right: 50px;
+  
 
 `
 
@@ -48,6 +49,7 @@ const Patrocinadores2 = styled.img`
   max-height: 100px;
   max-width: 100px;
   margin-right: 50px;
+  
   
 `
 

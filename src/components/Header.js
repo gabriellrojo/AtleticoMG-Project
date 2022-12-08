@@ -29,7 +29,9 @@ const Navigation = styled.nav`
     right: 0;
     top: 0;
     z-index: 1;
-    min-width: 60vw;
+    min-width: 65vw;
+    padding: 0 20px;
+    padding-top: 10px;
     min-height: 100vh;
     border: 1px solid black;
     border-top-left-radius: 10px;
