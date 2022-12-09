@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Historia from "./pages/Historia";
+import Titulos from "./pages/Titulos"
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -28,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/historia" element={<Historia/>}/>
+          <Route path="/titulos" element={<Titulos/>}/>
         </Routes>
         <Footer />
       </ThemeProvider>

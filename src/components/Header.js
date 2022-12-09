@@ -66,7 +66,7 @@ const Header = () => {
         <Navigation onClick={handleClick}>
             <NavLink className={styles.links} to="/">Home</NavLink>
             <NavLink className={styles.links} to="/historia">História</NavLink>
-            <NavLink className={styles.links}>Títulos</NavLink>
+            <NavLink className={styles.links} to="/titulos">Títulos</NavLink>
             <NavLink className={styles.links}>Estrutura</NavLink>
             <NavLink className={styles.links}>Elenco</NavLink>
         </Navigation>
