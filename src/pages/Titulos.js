@@ -16,7 +16,8 @@ const ContainerT = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px ;
+    padding: 20px;
+    background-image: linear-gradient(to bottom right, white, #d3d2d2);
 `
 
 const Table = styled.table`

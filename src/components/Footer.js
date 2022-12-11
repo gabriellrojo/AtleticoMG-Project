@@ -20,22 +20,22 @@ const Container = styled.div`
 `
 
 const Patrocinadores = styled.img`
-  max-height: 80px;
-  max-width: 80px;
+  max-height: 70px;
+  max-width: 70px;
   margin-right: 15px;
 
 `
 
 const Patrocinadores1 = styled.img`
-  max-height: 120px;
-  max-width: 125px;
+  max-height: 110px;
+  max-width: 115px;
   
 
 `
 
 const Patrocinadores2 = styled.img`
-  max-height: 120px;
-  max-width: 125px;
+  max-height: 110px;
+  max-width: 115px;
   margin-left: 15px;
   
 

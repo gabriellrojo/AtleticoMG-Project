@@ -13,7 +13,7 @@ import dois1 from "../assets/imgs/2021.jpeg"
 const Main = styled.div`
     height: 75vh;
     max-width: 100vw;
-    background-color: ${props => props.theme.colors.bgday};
+    background-color: black;
     display: flex;
     justify-content: center;
     align-items: center;

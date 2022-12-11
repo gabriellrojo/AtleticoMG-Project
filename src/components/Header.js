@@ -37,7 +37,7 @@ const Navigation = styled.nav`
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     background-color: #e0e0e0;
-    opacity: 0.8;
+    opacity: 0.9;
 
 `
 
@@ -67,7 +67,7 @@ const Header = () => {
             <NavLink className={styles.links} to="/">Home</NavLink>
             <NavLink className={styles.links} to="/historia">História</NavLink>
             <NavLink className={styles.links} to="/titulos">Títulos</NavLink>
-            <NavLink className={styles.links}>Estrutura</NavLink>
+            <NavLink className={styles.links} to="/estrutura">Estrutura</NavLink>
             <NavLink className={styles.links}>Elenco</NavLink>
         </Navigation>
     </Head>
