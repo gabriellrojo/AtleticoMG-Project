@@ -41,6 +41,7 @@ const Input = styled.input`
   margin-top: 10px;
   color: whitesmoke;
   font-size: 20px;
+  outline-color: ${props => props.theme.colors.bgfooterday};
 `
 
 const Btn = styled.input`
