@@ -1,0 +1,12 @@
+.link{
+    color: whitesmoke;
+    text-decoration: underline;
+}
+
+p, .link{
+    font-size: 20px;
+}
+
+p{
+    margin-top: 20px;
+}

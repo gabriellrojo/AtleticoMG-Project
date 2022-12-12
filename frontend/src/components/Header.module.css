@@ -1,0 +1,14 @@
+.menu{
+    width: 40px;
+    height: 40px;
+}
+
+.links{
+    margin-top: 10px;
+    line-height: 80px;
+    font-weight: bold;
+    font-size: 25px;
+    color: black;
+    border-bottom: 1px solid rgb(63, 62, 62);
+    padding-bottom: 15px;
+}

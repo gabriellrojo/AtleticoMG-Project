@@ -1,0 +1,9 @@
+.container{
+    position: fixed;
+    min-height: 50vh;
+    min-width: 50vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
