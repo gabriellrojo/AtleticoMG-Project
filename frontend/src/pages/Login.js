@@ -43,6 +43,14 @@ const Input = styled.input`
   font-size: 20px;
 `
 
+const Btn = styled.input`
+  background-color: ${props => props.theme.colors.bgfooterday};
+  padding: 18px 0;
+  border-radius: 10px;
+  margin: 20px 0;
+  font-size: 20px;
+`
+
 const Login = () => {
   return (
     <Container>
@@ -56,6 +64,7 @@ const Login = () => {
           Senha:
           <Input type="password" placeholder='Digite a sua senha'/>
         </Label>
+        <Btn type="submit" value="Entrar" />
       </Form>
       <p>Não é usuário? <Link className={styles.link} to={"/register"}>Registre-se</Link></p>
     </Container>
