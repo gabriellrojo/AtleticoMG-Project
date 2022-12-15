@@ -1,4 +1,4 @@
-const mongoose = require("../db/conn.js")
+const mongoose = require("../db/conn")
 const { Schema } = mongoose
 
 const Post = mongoose.model("Post", new Schema({
