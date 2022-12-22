@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from "./Login.module.css"
+import { useState } from 'react'
+import api from "../api"
 
 const Container = styled.div`
     min-height: 75vh;
@@ -52,18 +54,72 @@ const Btn = styled.input`
   font-size: 20px;
 `
 
+const ErroContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
+  min-height: 8vh;
+  background-color: #eb3535;
+  border-radius: 10px;
+  margin-bottom: 55px;
+  padding: 5px 20px;
+  
+`
+const Erro = styled.p`
+  text-align: center;
+`
+
 const Login = () => {
+
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
+  const [token, setToken] = useState()
+  const [error, setError] = useState()
+  const [userName, setUserName] = useState()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const user = {
+      email: email,
+      password: password
+    }
+
+    await api.post("http://localhost:5000/login", user, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => {
+      setToken(res.data.token)
+      setUserName(res.data.user.name)
+    })
+      .catch(err => setError(err.response.data.erro))   
+  }
+
+  useEffect(() => {
+    if(token){
+      localStorage.setItem("token", token)
+      localStorage.setItem("name", userName)
+      navigate("/dashboard")
+    }
+  })
+
   return (
     <Container>
       <Titulo>Faça o login e discuta o Galo.</Titulo>
-      <Form>
+      {error&& <ErroContainer>
+        <Erro>{error}</Erro>
+        </ErroContainer>}
+      <Form onSubmit={handleSubmit}>
         <Label>
           Email:
-          <Input type="email" placeholder='Digite o seu email'/>
+          <Input type="email" placeholder='Digite o seu email' value={email} onChange={e => setEmail(e.target.value)}/>
         </Label>
         <Label>
           Senha:
-          <Input type="password" placeholder='Digite a sua senha'/>
+          <Input type="password" placeholder='Digite a sua senha' value={password} onChange={e => setPassword(e.target.value)}/>
         </Label>
         <Btn type="submit" value="Entrar" />
       </Form>

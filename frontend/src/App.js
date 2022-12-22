@@ -11,6 +11,8 @@ import Estrutura from "./pages/Estrutura";
 import Elenco from "./pages/Elenco";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import CriarPost from "./pages/CriarPost"
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -24,6 +26,7 @@ const GlobalStyle = createGlobalStyle`
 `
 
 function App() {
+  const auth = localStorage.getItem("token")
   return (
     <>
       <BrowserRouter>
@@ -38,6 +41,8 @@ function App() {
           <Route path="/elenco" element={<Elenco/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
+          <Route path="/dashboard" element={auth ? (<Dashboard/>) : (<Login/>)}/>
+          <Route path="/dashboard/createpost" element={auth ? (<CriarPost/>) : (<Login/>)}/>
         </Routes>
         <Footer />
       </ThemeProvider>

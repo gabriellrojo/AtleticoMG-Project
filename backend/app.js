@@ -5,8 +5,9 @@ const route = require("./routes/routes")
 
 server.use(express.json())
 server.use(express.urlencoded({
-    extended: false
+    extended: true
 }))
+server.use(cors())
 server.use(cors({
     credentials: true,
     origin: "http://localhost:3000"

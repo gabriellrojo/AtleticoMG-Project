@@ -1,0 +1,20 @@
+.link{
+    color: whitesmoke;
+    text-decoration: underline;
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.btn{
+    background-color: #faf76a;
+    padding: 18px 0;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 20px;
+    color: black;
+    min-width: 330px;
+    text-align: center;
+    margin-top: 40px;
+    
+}

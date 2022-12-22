@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from "styled-components"
-import { NavLink } from 'react-router-dom'
+import { Navigate, NavLink, useNavigate } from 'react-router-dom'
 import escudo from "../assets/imgs/atleticomg.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
@@ -41,8 +41,20 @@ const Navigation = styled.nav`
 
 `
 
-const Header = () => {
+const Logout = styled.p`
+    margin-top: 10px;
+    line-height: 80px;
+    font-weight: bold;
+    font-size: 25px;
+    color: black;
+    border-bottom: 1px solid rgb(63, 62, 62);
+    padding-bottom: 15px;
+`
 
+const Header = () => {
+    const token = localStorage.getItem("token")
+    const navigate = useNavigate()
+    
     const handleClick = () => {
         const nav = document.querySelector("nav")
         const menu = document.querySelector("svg")
@@ -58,6 +70,11 @@ const Header = () => {
             
         }
     }
+    const logout = () => {
+        localStorage.removeItem("token")
+        localStorage.removeItem("name")
+        navigate("/")
+    }
 
   return (
     <Head>
@@ -69,7 +86,10 @@ const Header = () => {
             <NavLink className={styles.links} to="/titulos">Títulos</NavLink>
             <NavLink className={styles.links} to="/estrutura">Estrutura</NavLink>
             <NavLink className={styles.links} to="/elenco">Elenco</NavLink>
-            <NavLink className={styles.links} to="/login">Login</NavLink>
+            {!token&& <NavLink className={styles.links} to="/login">Login</NavLink>}
+            {token&& <NavLink className={styles.links} to="/forum">Forum</NavLink>}
+            {token&& <NavLink className={styles.links} to="/dashboard">Dashboard</NavLink>}
+            {token&& <Logout onClick={logout}>Logout</Logout>}
         </Navigation>
     </Head>
   )
