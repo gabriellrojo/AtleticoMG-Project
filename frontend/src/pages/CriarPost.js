@@ -64,8 +64,8 @@ const CriarPost = () => {
 
         await api.post("http://localhost:5000/dashboard/createpost", post, {
           headers: {
-            "authorization" : `Bearer ${token}`,
-            "Content-Type" : "application/json"
+            "Content-Type" : "application/json",
+            "authorization" : `Bearer ${token}`
           }
         }).then(res => console.log(res.data))
           .catch(err => console.log(err.response.data))

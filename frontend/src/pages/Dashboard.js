@@ -5,6 +5,12 @@ import { Link } from 'react-router-dom'
 import api from "../api"
 import styled from "styled-components"
 import styles from "./Dashboard.module.css"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { far } from "@fortawesome/free-regular-svg-icons"
+import { fas } from "@fortawesome/free-solid-svg-icons"
+import { library } from '@fortawesome/fontawesome-svg-core'
+library.add(far)
+library.add(fas)
 
 const Container = styled.div`
     min-height: 75vh;
@@ -47,6 +53,20 @@ const Autor = styled.p`
   font-size: 20px;
 `
 
+const LikesContainer = styled.div`
+  display: flex;
+  margin-bottom: 30px;
+  margin-top: -15px;
+`
+
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+
+`
+
 const Dashboard = () => {
     const navigate = useNavigate()
     const [posts, setPosts] = useState()
@@ -62,14 +82,31 @@ const Dashboard = () => {
       api.get("http://localhost:5000/dashboard", {
       headers: {
         "Content-Type": "application/json",
-        "authorization": `Bearer ${token}`
+        "authorization": `Bearer ${token}`,
       }
     }).then(res => {
-      setPosts(res.data.posts)
-      console.log(res.data)})
+      setPosts(res.data.posts)})
       .catch(err => console.log(err))
 
-    },[])
+    },[posts])
+
+    const handleLike = async (id) => {
+      await api.put(`http://localhost:5000/likes/${id}`, null, {
+        headers: {
+          "authorization": `Bearer ${token}`
+        }
+      }).then(res => console.log(res.data.updatedPost))
+        .catch(err => console.log(err.response.data.erro))
+    }
+
+    const handleNoLike = async (id) => {
+      await api.put(`http://localhost:5000/undonelike/${id}`, null, {
+        headers: {
+          "authorization": `Bearer ${token}`
+        }
+      }).then(res => console.log(res.data.updatedPost))
+        .catch(err => err.response.data.erro)
+    }
 
   return (
     <Container>
@@ -79,6 +116,18 @@ const Dashboard = () => {
           <ContainerP>
             <TituloP>{post.title}</TituloP>
             <Autor>autor: {post.userName}</Autor>
+            <LikesContainer>
+              {post.likes.includes(post.userId) ? (<IconContainer>
+                <FontAwesomeIcon onClick={() => handleNoLike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-up" /> <p>{post.likes.length} likes</p>
+                </IconContainer>) : (<IconContainer>
+                  <FontAwesomeIcon onClick={() => handleLike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-up" /> <p>{post.likes.length} likes</p>
+                  </IconContainer>)}
+              {post.dislikes.length > 0 ? (<IconContainer>
+                <FontAwesomeIcon className={styles.icone} icon="fa-solid fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
+                </IconContainer>) : (<IconContainer>
+                  <FontAwesomeIcon className={styles.icone} icon="fa-regular fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
+                </IconContainer>)}
+            </LikesContainer>
           </ContainerP>
         ))}
         <Link to="/dashboard/createpost" className={styles.btn}> Criar post </Link>
