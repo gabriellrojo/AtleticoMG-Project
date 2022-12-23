@@ -165,4 +165,94 @@ module.exports = class Controller {
             post: post
         })
     }
+
+    static forum = async (req, res) => {
+
+        const posts = await Post.find()
+
+        if(!posts){
+            res.status(404).json({"erro" : "Ainda não há nenhum post"})
+            return
+        }
+
+        res.status(200).json({
+            posts: posts
+        })
+
+    }
+
+    static likeOnPost = async (req, res) => {
+        const id = req.params.id 
+        const post = await Post.findById({_id: id})
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const idUser = decoded.id
+        const user = await User.findById({_id: idUser})
+        const userId = user._id
+
+        if(!user){
+            res.status(422).json({"erro": "Usuário não encontrado"})
+            return
+        }
+        
+        if(!post){
+            res.status(404).json({"erro": "Post não encontrado"})
+            return
+        }
+
+        if(post.likes.includes(userId)){
+            res.status(422).json({"erro": "Você já curtiu essa postagem"})
+            return
+        }
+
+        const userIdToString = userId.toString()
+
+        post.likes.push(userIdToString)
+
+        const updatedPost = await Post.findByIdAndUpdate({_id: id}, {$set: post}, {new: true})
+
+        res.status(201).json({
+            updatedPost: updatedPost
+        })
+    }
+
+    static undoneLike = async (req, res) => {
+        const id = req.params.id
+        const post = await Post.findById({_id: id})
+
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+
+        const user = await User.findById({_id: userId})
+        
+        if(!user){
+            res.status(422).json({"erro": "Usuário não encontrado"})
+            return
+        }
+
+        if(!post){
+            res.status(422).json({"erro": "Post não encontrado"})
+            return
+        }
+
+        if(!post.likes.includes(userId)){
+            res.status(422).json({"erro": "Você não pode descurtir pois não curtiu"})
+            return
+        }
+
+        post.likes = post.likes.filter((id) => id !== userId)
+        
+        const updatedPost = await Post.findByIdAndUpdate({_id: id}, {$set: post}, {new: true})
+        
+        res.status(201).json({
+            updatedPost: updatedPost
+        })
+
+    }
 }
