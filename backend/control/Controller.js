@@ -1,7 +1,11 @@
 const User = require("../model/User")
-const Post = require("../model/Post")
+const { Post } = require("../model/Post")
+const { Comment } = require("../model/Post")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const { post } = require("../routes/routes")
+const { trusted } = require("mongoose")
+
 
 module.exports = class Controller {
     
@@ -191,6 +195,7 @@ module.exports = class Controller {
         const idUser = decoded.id
         const user = await User.findById({_id: idUser})
         const userId = user._id
+        const userIdToString = userId.toString()
 
         if(!user){
             res.status(422).json({"erro": "Usuário não encontrado"})
@@ -202,12 +207,15 @@ module.exports = class Controller {
             return
         }
 
-        if(post.likes.includes(userId)){
+        if(post.likes.includes(userIdToString)){
             res.status(422).json({"erro": "Você já curtiu essa postagem"})
             return
         }
 
-        const userIdToString = userId.toString()
+        if(post.dislikes.includes(userId)){
+            res.status(422).json({"erro": "Retire o dislike para poder curtir essa postagem"})
+            return
+        }
 
         post.likes.push(userIdToString)
 
@@ -253,6 +261,250 @@ module.exports = class Controller {
         res.status(201).json({
             updatedPost: updatedPost
         })
+    }
 
+    static dislike = async (req, res) => {
+        const id = req.params.id
+        const post = await Post.findById({_id: id})
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+        //const userIdString = userId.toString()
+
+        if(!post){
+            res.status(404).json({"erro": "Não foi encontrado nenhum post"})
+            return
+        }
+
+        if(!userId){
+            res.status(404).json({"erro": "Não foi encontrado nenhum usuário"})
+            return
+        }
+
+        if(post.likes.includes(userId)){
+            res.status(422).json({"erro": "Retire seu like para poder dar dislike no post"})
+            return
+        }
+
+        post.dislikes.push(userId)
+
+        const updateDislikes = await Post.findByIdAndUpdate({_id: id}, {$set: post}, {new: true})
+
+        res.status(201).json({
+            updatedPost: updateDislikes
+        }) 
+    }
+
+    static undoneDislike = async (req, res) => {
+        const id = req.params.id
+        const post = await Post.findById({_id: id})
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+        
+        if(!post){
+            res.status(404),json({"erro": "Não foi encontrado nenhum post"})
+            return
+        }
+
+        if(!userId){
+            res.status(404).json({"erro": "Não foi encontrado nenhum usuário"})
+            return
+        }
+        
+        if(!post.dislikes.includes(userId)){
+            res.status(422).json({"erro": "Você não pode retirar o dislike por não deu dislike no post"})
+            return
+        }
+
+        post.dislikes = post.dislikes.filter(id => id !== userId)
+
+        const updatedPost = await Post.findByIdAndUpdate({_id: id}, {$set: post}, {new: true})
+
+        res.status(201).json({
+            updatedPost: updatedPost
+        })
+    }
+
+    static getPost = async (req, res) => {
+        const id = req.params.id
+
+        const post = await Post.findById({_id: id})
+        const comments = post.comments
+
+        if(!post){
+            res.status(404).json({"erro": "Post não encontrado"})
+            return
+        }
+
+        res.status(200).json({
+            post: post,
+            comments: comments
+        })
+    }
+
+    static comments = async (req, res) => {
+        const comment = req.body.text
+        const id = req.params.id
+        const post = await Post.findById({_id: id})
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+        const user = await User.findById({_id: userId})
+
+        const novoComment = new Comment({
+            name: user.name,
+            comment: comment,
+            postId: id,
+            number: Math.round(Math.random()*100)
+        })
+
+        const newComment = await novoComment.save()
+
+        post.comments.push(newComment)
+
+        const updatedPost = await Post.findByIdAndUpdate({_id: id}, {$set: post}, {new: true})
+
+        res.send(updatedPost)
+
+    }
+
+    static getComment = async (req, res) => {
+        const id = req.params.id
+        const comment = await Comment.findById({_id: id})
+
+        if(!comment){
+            res.status(404).json({"erro": "Comentário não encontrado"})
+        }
+
+        res.status(201).json({
+            comment: comment
+        })
+
+    }
+
+    static likeOnComments = async (req, res) => { 
+        const id = req.params.id
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+
+        const comment = await Comment.findById({_id: id})
+
+        if(!comment){
+            res.status(404).json({"erro": "Comentário não encontrado"})
+            return
+        }
+
+        if(comment.dislikes.includes(userId)){
+            res.status(422).json({"erro": "Você precisa retirar o dislike para curtir"})
+            return
+        }
+
+        comment.likes.push(userId)
+
+        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
+
+        res.status(201).json({
+            updateComment: updateComment
+        })
+    }
+
+    static dislikeOnComment = async (req, res) => {
+        const id = req.params.id
+        
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+
+        const comment = await Comment.findById({_id: id})
+
+        if(!comment){
+            res.status(404).json({"erro": "Comentário não encontrado"})
+            return
+        }
+
+        if(comment.likes.includes(userId)){
+            res.status(422).json({"erro": "Você precisa retirar o like para descurtir"})
+            return
+        }
+
+        comment.dislikes.push(userId)
+
+        const updateComments = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
+
+        res.status(201).json({
+            updateComments: updateComments
+        })
+    }
+
+    static unlikeComment = async (req, res) => {
+        const id = req.params.id
+
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+
+        const comment = await Comment.findById({_id: id})
+
+        if(!comment){
+            res.status(404).json({"erro": "Comentário não encontrado"})
+            return
+        }
+
+        if(!comment.likes.includes(userId)){
+            res.status(422).json({"erro": "A postagem não foi curtida"})
+            return
+        }
+
+        comment.likes = comment.likes.filter(id => id !== userId)
+
+        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
+
+        res.status(201).json({
+            updateComment: updateComment
+        })
+    }
+
+    static undislikeComment =  async (req, res) => {
+        const id = req.params.id
+        
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+
+        const comment = await Comment.findById({_id: id})
+
+        if(!comment){
+            res.status(404).json({"erro": "Comentário não encontrado"})
+            return
+        }
+
+        if(!comment.dislikes.includes(userId)){
+            res.status(422).json({"erro": "Você não descurtiu esse post"})
+            return
+        }
+
+        comment.dislikes = comment.dislikes.filter(id => id !== userId)
+
+        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
+
+        res.status(201).json({
+            updateComment: updateComment
+        })
     }
 }
