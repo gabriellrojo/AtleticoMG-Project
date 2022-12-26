@@ -104,7 +104,7 @@ const Login = () => {
       localStorage.setItem("name", userName)
       navigate("/dashboard")
     }
-  })
+  }, [handleSubmit])
 
   return (
     <Container>

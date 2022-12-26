@@ -51,6 +51,7 @@ const TituloP = styled.p`
 const Autor = styled.p`
   font-style: italic;
   font-size: 20px;
+  margin-bottom: 0px;
 `
 
 const LikesContainer = styled.div`
@@ -65,6 +66,10 @@ const IconContainer = styled.div`
   justify-content: center;
   margin-right: 20px;
 
+`
+
+const Number = styled.span`
+  font-weight: bold;
 `
 
 const Dashboard = () => {
@@ -105,7 +110,25 @@ const Dashboard = () => {
           "authorization": `Bearer ${token}`
         }
       }).then(res => console.log(res.data.updatedPost))
-        .catch(err => err.response.data.erro)
+        .catch(err => console.log(err.response.data.erro))
+    }
+
+    const handleDislike = async (id) => {
+      await api.put(`http://localhost:5000/dislikes/${id}`, null, {
+        headers: {
+          "authorization": `Bearer ${token}`
+        }
+      }).then(res => console.log(res.data.updatedPost))
+        .catch(err => console.log(err.response.data.erro))
+    }
+
+    const handleNoDislike = async (id) => {
+      await api.put(`http://localhost:5000/undonedislike/${id}`, null, {
+        headers: {
+          "authorization": `Bearer ${token}`
+        }
+      }).then(res => console.log(res.data.updatedPost))
+        .catch(err => console.log(err.respose.data.erro))
     }
 
   return (
@@ -114,18 +137,21 @@ const Dashboard = () => {
         {posts&& posts.length == 0&& <Frase>Você ainda não tem nenhum post publicado</Frase>}
         {posts&& posts.map(post => (
           <ContainerP>
-            <TituloP>{post.title}</TituloP>
-            <Autor>autor: {post.userName}</Autor>
+            <Link to={`/post/${post._id}`}>
+              <TituloP>{post.title}</TituloP>
+              <Autor>autor: {post.userName}</Autor>
+              <p>Comentários: <Number>{post.comments.length}</Number></p>
+            </Link>
             <LikesContainer>
               {post.likes.includes(post.userId) ? (<IconContainer>
                 <FontAwesomeIcon onClick={() => handleNoLike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-up" /> <p>{post.likes.length} likes</p>
                 </IconContainer>) : (<IconContainer>
                   <FontAwesomeIcon onClick={() => handleLike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-up" /> <p>{post.likes.length} likes</p>
                   </IconContainer>)}
-              {post.dislikes.length > 0 ? (<IconContainer>
-                <FontAwesomeIcon className={styles.icone} icon="fa-solid fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
+              {post.dislikes.includes(post.userId) ? (<IconContainer>
+                <FontAwesomeIcon onClick={() => handleNoDislike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
                 </IconContainer>) : (<IconContainer>
-                  <FontAwesomeIcon className={styles.icone} icon="fa-regular fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
+                  <FontAwesomeIcon onClick={() => handleDislike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
                 </IconContainer>)}
             </LikesContainer>
           </ContainerP>

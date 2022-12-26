@@ -109,7 +109,7 @@ const Register = () => {
       navigate("/dashboard") 
     }
   
-  })
+  }, [handleSubmit])
   
   return (
     <div>

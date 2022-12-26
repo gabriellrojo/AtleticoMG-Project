@@ -21,7 +21,6 @@ const Forum = () => {
   useEffect(() => {
     api.get("http://localhost:5000/posts", {
       headers: {
-        "Content-Type" : "application/json",
         "authorization" : `Bearer ${token}`
       }
     }).then(res => setPosts(res.data.posts))
