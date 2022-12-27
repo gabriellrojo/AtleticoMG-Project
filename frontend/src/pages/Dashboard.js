@@ -156,7 +156,8 @@ const Dashboard = () => {
             </LikesContainer>
           </ContainerP>
         ))}
-        <Link to="/dashboard/createpost" className={styles.btn}> Criar post </Link>
+        <Link to="/dashboard/createpost" className={styles.btn}> Criar post</Link>
+        <Link to="/forum" className={styles.back}>Ir para o forum</Link>
     </Container>
   )
 }

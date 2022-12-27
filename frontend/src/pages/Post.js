@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import styled from "styled-components"
 import { useState } from 'react'
 import api from "../api"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import styles from "./Post.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { far } from "@fortawesome/free-regular-svg-icons"
@@ -83,17 +83,44 @@ const Comment = styled.p`
   margin-top: -20px;
 `
 
-const Btn = styled.button`
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`
+
+const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 30px;
+`
+
+const Input = styled.input`
+  margin-bottom: 30px;
+  background-color: black;
+  border: none;
+  border-bottom: 1px solid #d3d2d2;
+  padding: 15px 0;
+  padding-left: 7px;
+  padding-right: 80px;
+  margin-top: 20px;
+  color: whitesmoke;
+  font-size: 20px;
+  outline-color: ${props => props.theme.colors.bgfooterday};
+`
+
+const Btn = styled.input`
   background-color: ${props => props.theme.colors.bgfooterday};
   padding: 18px 0;
   border-radius: 10px;
   margin: 20px 0;
   font-size: 20px;
-  min-width: 330px;
 `
 
 const Post = () => {
   const [post, setPost] = useState()
+  const [comment, setComment] = useState()
   const idParams = useParams()
   const id = idParams.id
   const token = localStorage.getItem("token")
@@ -118,6 +145,7 @@ const Post = () => {
       }
     }).then(res => console.log(res.data.updatedPost))
       .catch(err => console.log(err.response.data.erro))
+    
   }
 
   const handleNoLike = async (id) => {
@@ -147,6 +175,22 @@ const Post = () => {
       .catch(err => console.log(err.respose.data.erro))
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const commentPost = {
+      comment: comment
+    }
+
+    await api.post(`http://localhost:5000/post/comment/${id}`, commentPost , {
+      headers: {
+        "Content-Type" : "application/json",
+        "authorization" : `Bearer ${token}`
+      }
+    }).then(res => setComment(res.data.updatePost))
+      .catch(err => console.log(err.response.data.erro))
+  }
+
   return (
     <Container>
         {post&& 
@@ -172,14 +216,23 @@ const Post = () => {
           <Comentarios>Comentários:</Comentarios>
           <ContainerC>
             {post.comments.map(comment => (
-              <ContainerC2>
-                <Name>{comment.name}:</Name>
-                <Comment>{comment.comment}</Comment>
-              </ContainerC2>
+              <Link to={`/post/comment/${comment._id}`}>
+                <ContainerC2>
+                  <Name>{comment.name}:</Name>
+                  <Comment>{comment.comment}</Comment>
+                </ContainerC2>
+              </Link>
             ))}
           </ContainerC>
         </ContainerP>}
-        <Btn>Comentar</Btn>
+        <Form onSubmit={handleSubmit}>
+            <Label>
+                Comentar: 
+                <Input type="text" placeholder="Digite sua resposta" value={comment} onChange={(e) => setComment(e.target.value)}/>
+            </Label>
+            <Btn type="submit" value="Comentar"/>
+        </Form>
+        <Link to="/forum" className={styles.back}>Voltar</Link>
     </Container>
   )
 }

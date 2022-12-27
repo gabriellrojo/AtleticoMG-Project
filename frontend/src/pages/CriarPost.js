@@ -1,7 +1,9 @@
 import React from 'react'
 import { useState } from 'react'
+import { Link } from "react-router-dom"
 import styled from "styled-components"
 import api from "../api"
+import styles from "./CriarPost.module.css"
 
 const Container = styled.div`
     min-height: 75vh;
@@ -81,6 +83,7 @@ const CriarPost = () => {
                 <Btn type="submit" value="Criar Post" />
             </Label>
         </Form>
+        <Link to="/dashboard" className={styles.back}>Voltar</Link>
     </Container>
   )
 }

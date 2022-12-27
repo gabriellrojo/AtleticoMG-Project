@@ -1,7 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link } from "react-router-dom" 
 import styled from "styled-components"
-import { useState } from 'react'
+import styles from "./Forum.module.css"
 import api from '../api'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+library.add(fas)
+library.add(far)
 
 const Container = styled.div`
     min-height: 75vh;
@@ -12,6 +19,54 @@ const Container = styled.div`
     align-items: center;
     color: whitesmoke;
     padding: 40px;
+`
+
+const Titulo = styled.h1`
+  text-align: center;
+  margin-bottom: 30px;
+`
+
+const Frase = styled.h1`
+  text-align: center;
+  font-weight: normal;
+  font-size: 25px;
+`
+
+const ContainerP = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-bottom: 1px solid whitesmoke;
+  min-width: 330px;
+`
+
+const TituloP = styled.p`
+  font-weight: bold;
+  font-size: 35px;
+  margin-bottom: 0px;
+`
+
+const Autor = styled.p`
+  font-style: italic;
+  font-size: 20px;
+  margin-bottom: 0px;
+`
+const Number = styled.span`
+  font-weight: bold;
+`
+
+const LikesContainer = styled.div`
+  display: flex;
+  margin-bottom: 30px;
+  margin-top: -15px;
+`
+
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+
 `
 
 const Forum = () => {
@@ -28,17 +83,72 @@ const Forum = () => {
   
   }, [posts])
 
+  const handleLike = async (id) => {
+    await api.put(`http://localhost:5000/likes/${id}`, null, {
+      headers: {
+        "authorization": `Bearer ${token}`
+      }
+    }).then(res => console.log(res.data.updatedPost))
+      .catch(err => console.log(err.response.data.erro))
+  }
+
+  const handleNoLike = async (id) => {
+    await api.put(`http://localhost:5000/undonelike/${id}`, null, {
+      headers: {
+        "authorization": `Bearer ${token}`
+      }
+    }).then(res => console.log(res.data.updatedPost))
+      .catch(err => console.log(err.response.data.erro))
+  }
+
+  const handleDislike = async (id) => {
+    await api.put(`http://localhost:5000/dislikes/${id}`, null, {
+      headers: {
+        "authorization": `Bearer ${token}`
+      }
+    }).then(res => console.log(res.data.updatedPost))
+      .catch(err => console.log(err.response.data.erro))
+  }
+
+  const handleNoDislike = async (id) => {
+    await api.put(`http://localhost:5000/undonedislike/${id}`, null, {
+      headers: {
+        "authorization": `Bearer ${token}`
+      }
+    }).then(res => console.log(res.data.updatedPost))
+      .catch(err => console.log(err.respose.data.erro))
+  }
+
   return (
     <Container>
-        <h1>Vamos GALO!</h1>
+        <Titulo>Vamos GALO!</Titulo>
         {posts&& posts.length === 0&&
-          <p>Ainda não há nenhum post publicado</p>
+          <Frase>Ainda não há nenhum post publicado</Frase>
         }
         {posts&& posts.map(post => (
-          <div>
-            <p>{post.title}</p>
-            <p>author: {post.userName}</p>
-          </div>
+          <ContainerP>
+            <Link to={`/post/${post._id}`}>
+              <TituloP>{post.title}</TituloP>
+                <Autor>autor: {post.userName}</Autor>
+                <p>Comentários: <Number>{post.comments.length}</Number></p>
+            </Link>
+            <LikesContainer>
+              {post.likes.includes(post.userId) ? 
+              (<IconContainer>
+                <FontAwesomeIcon onClick={() => handleNoLike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-up" /> <p>{post.likes.length} likes</p>
+              </IconContainer>) :
+              (<IconContainer>
+                <FontAwesomeIcon onClick={() => handleLike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-up" /> <p>{post.likes.length} likes</p>
+              </IconContainer>)}
+            {post.dislikes.includes(post.userId) ? 
+            (<IconContainer>
+              <FontAwesomeIcon onClick={() => handleNoDislike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
+            </IconContainer>) :
+            (<IconContainer>
+              <FontAwesomeIcon onClick={() => handleDislike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
+            </IconContainer>)}
+            </LikesContainer>
+          </ContainerP>
         ))}
     </Container>
   )
