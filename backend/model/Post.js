@@ -3,11 +3,12 @@ const { Schema } = mongoose
 
 const Comment = mongoose.model("Comment", new Schema({
     name: { type: String },
+    userId: mongoose.ObjectId,
     comment: { type: String },
     likes: { type: Array },
     dislikes: { type: Array },
     postId: mongoose.ObjectId,
-    reply: { type: Array }
+    replies: { type: Array },
 }))
 
 const Post = mongoose.model("Post", new Schema({

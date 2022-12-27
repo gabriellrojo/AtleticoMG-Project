@@ -348,7 +348,7 @@ module.exports = class Controller {
     }
 
     static comments = async (req, res) => {
-        const comment = req.body.text
+        const comment = req.body.comment
         const id = req.params.id
         const post = await Post.findById({_id: id})
         const bearerToken = req.headers.authorization
@@ -360,9 +360,9 @@ module.exports = class Controller {
 
         const novoComment = new Comment({
             name: user.name,
+            userId: userId,
             comment: comment,
-            postId: id,
-            number: Math.round(Math.random()*100)
+            postId: id
         })
 
         const newComment = await novoComment.save()
@@ -371,7 +371,9 @@ module.exports = class Controller {
 
         const updatedPost = await Post.findByIdAndUpdate({_id: id}, {$set: post}, {new: true})
 
-        res.send(updatedPost)
+        res.status(201).json({
+            updatePost: updatedPost
+        })
 
     }
 
@@ -381,6 +383,7 @@ module.exports = class Controller {
 
         if(!comment){
             res.status(404).json({"erro": "Comentário não encontrado"})
+            return
         }
 
         res.status(201).json({
@@ -389,7 +392,7 @@ module.exports = class Controller {
 
     }
 
-    static likeOnComments = async (req, res) => { 
+    static likeOnComment = async (req, res) => { 
         const id = req.params.id
         const bearerToken = req.headers.authorization
         const split = bearerToken.split(" ")
@@ -441,10 +444,10 @@ module.exports = class Controller {
 
         comment.dislikes.push(userId)
 
-        const updateComments = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
+        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
 
         res.status(201).json({
-            updateComments: updateComments
+            updateComment: updateComment
         })
     }
 
@@ -507,4 +510,37 @@ module.exports = class Controller {
             updateComment: updateComment
         })
     }
+
+    static addReply = async (req, res) => {
+        const id = req.params.id
+        const reply = req.body.reply
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const userId = decoded.id
+
+        const user = await User.findById({_id: userId})
+        const comment = await Comment.findById({_id: id})
+        const userName = user.name
+
+        if(!comment){
+            res.status(404).json({"erro": "Comentário não encontrado"})
+            return
+        }
+
+        const replyComment = {
+            name: userName,
+            reply: reply
+        }
+
+        comment.replies.push(replyComment)
+
+        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
+
+        res.status(201).json({
+            updateComment: updateComment
+        })  
+
+    } 
 }
