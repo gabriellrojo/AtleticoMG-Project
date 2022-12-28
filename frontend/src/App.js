@@ -15,7 +15,6 @@ import Dashboard from "./pages/Dashboard";
 import CriarPost from "./pages/CriarPost"
 import Forum from "./pages/Forum"
 import Post from "./pages/Post"
-import Comment from "./pages/Comment";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -38,7 +37,6 @@ function App() {
         <Header />
         <Routes>
           <Route path="/post/:id" element={auth ? (<Post/>) : (<Login/>)}/>
-          <Route path="post/comment/:id" element={auth? (<Comment/>) : (<Login/>)}/>
           <Route path="/" element={<Home/>}/>
           <Route path="/historia" element={<Historia/>}/>
           <Route path="/titulos" element={<Titulos/>}/>

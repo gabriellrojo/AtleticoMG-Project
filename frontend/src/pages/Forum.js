@@ -71,6 +71,7 @@ const IconContainer = styled.div`
 
 const Forum = () => {
   const [posts, setPosts] = useState()
+  const [user, setUser] = useState()
   const token = localStorage.getItem("token")
 
   useEffect(() => {
@@ -82,6 +83,15 @@ const Forum = () => {
       .catch(err => console.log(err.response.data.erro))
   
   }, [posts])
+
+  useEffect(() => {
+    api.get("http://localhost:5000/user", {
+      headers: {
+        "authorization" : `Bearer ${token}`
+      }
+    }).then(res => setUser(res.data.id))
+      .catch(err => console.log(err.response.data.erro))
+  },[])
 
   const handleLike = async (id) => {
     await api.put(`http://localhost:5000/likes/${id}`, null, {
@@ -123,7 +133,7 @@ const Forum = () => {
     <Container>
         <Titulo>Vamos GALO!</Titulo>
         {posts&& posts.length === 0&&
-          <Frase>Ainda não há nenhum post publicado</Frase>
+          <Frase>Ainda não há nenhum post publicado!</Frase>
         }
         {posts&& posts.map(post => (
           <ContainerP>
@@ -133,14 +143,14 @@ const Forum = () => {
                 <p>Comentários: <Number>{post.comments.length}</Number></p>
             </Link>
             <LikesContainer>
-              {post.likes.includes(post.userId) ? 
+              {post.likes.includes(user) ? 
               (<IconContainer>
                 <FontAwesomeIcon onClick={() => handleNoLike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-up" /> <p>{post.likes.length} likes</p>
               </IconContainer>) :
               (<IconContainer>
                 <FontAwesomeIcon onClick={() => handleLike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-up" /> <p>{post.likes.length} likes</p>
               </IconContainer>)}
-            {post.dislikes.includes(post.userId) ? 
+            {post.dislikes.includes(user) ? 
             (<IconContainer>
               <FontAwesomeIcon onClick={() => handleNoDislike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
             </IconContainer>) :

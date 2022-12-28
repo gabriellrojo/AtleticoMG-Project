@@ -118,6 +118,13 @@ const Btn = styled.input`
   font-size: 20px;
 `
 
+const Frase = styled.p`
+  margin-top: -20px;
+  border-bottom: 1px solid whitesmoke;
+  padding: 20px 0;
+  padding-bottom: 30px;
+`
+
 const Post = () => {
   const [post, setPost] = useState()
   const [comment, setComment] = useState()
@@ -189,6 +196,8 @@ const Post = () => {
       }
     }).then(res => setComment(res.data.updatePost))
       .catch(err => console.log(err.response.data.erro))
+    
+    setComment("")
   }
 
   return (
@@ -214,6 +223,7 @@ const Post = () => {
             </IconContainer>)}
           </LikesContainer>
           <Comentarios>Comentários:</Comentarios>
+          {post.comments.length == 0&& <Frase>Ninguém comentou neste post!</Frase>}
           <ContainerC>
             {post.comments.map(comment => (
               <Link to={`/post/comment/${comment._id}`}>

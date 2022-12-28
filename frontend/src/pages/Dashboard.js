@@ -40,6 +40,7 @@ const ContainerP = styled.div`
   align-items: flex-start;
   border-bottom: 1px solid whitesmoke;
   min-width: 330px;
+  padding-bottom: 25px;
 `
 
 const TituloP = styled.p`
@@ -60,6 +61,14 @@ const LikesContainer = styled.div`
   margin-top: -15px;
 `
 
+const ExcluirContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  margin-top: -18px;
+`
+
 const IconContainer = styled.div`
   display: flex;
   align-items: center;
@@ -67,15 +76,18 @@ const IconContainer = styled.div`
   margin-right: 20px;
 
 `
-
 const Number = styled.span`
   font-weight: bold;
+`
+
+const Excluir = styled.p`
+  font-style: italic;
+  margin-top: 0px;
 `
 
 const Dashboard = () => {
     const navigate = useNavigate()
     const [posts, setPosts] = useState()
-
     const token = localStorage.getItem("token")
     const name = localStorage.getItem("name")
     if(!token){
@@ -131,10 +143,19 @@ const Dashboard = () => {
         .catch(err => console.log(err.respose.data.erro))
     }
 
+    const handleDelete = async(id) => {
+      await api.delete(`http://localhost:5000/post/delete/${id}`, {
+        headers: {
+          "authorization": `Bearer ${token}`
+        }
+      }).then(res => console.log(res.data.message))
+        .catch(err => console.log(err))
+    }
+
   return (
     <Container>
-        <Titulo>Seja bem vindo: {name}</Titulo>
-        {posts&& posts.length == 0&& <Frase>Você ainda não tem nenhum post publicado</Frase>}
+        <Titulo>Seja bem vindo(a): {name}</Titulo>
+        {posts&& posts.length == 0&& <Frase>Você ainda não publicou nenhum post</Frase>}
         {posts&& posts.map(post => (
           <ContainerP>
             <Link to={`/post/${post._id}`}>
@@ -154,8 +175,10 @@ const Dashboard = () => {
                   <FontAwesomeIcon onClick={() => handleDislike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-down" /> <p>{post.dislikes.length} dislikes</p>
                 </IconContainer>)}
             </LikesContainer>
-          </ContainerP>
-        ))}
+            <ExcluirContainer onClick={() => handleDelete(post._id)}>
+              <FontAwesomeIcon icon="fa-solid fa-trash" className={styles.icone2}/> <Excluir>excluir</Excluir>
+            </ExcluirContainer>
+          </ContainerP>))}
         <Link to="/dashboard/createpost" className={styles.btn}> Criar post</Link>
         <Link to="/forum" className={styles.back}>Ir para o forum</Link>
     </Container>

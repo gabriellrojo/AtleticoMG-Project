@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { Link } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import api from "../api"
 import styles from "./CriarPost.module.css"
@@ -54,28 +54,56 @@ const Btn = styled.input`
   font-size: 20px;
 `
 
+const ErroContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
+  min-height: 8vh;
+  background-color: #eb3535;
+  border-radius: 10px;
+  margin-bottom: 55px;
+  padding: 5px 20px;
+  
+`
+const Erro = styled.p`
+  text-align: center;
+`
+
 const CriarPost = () => {
     const [title, setTitle] = useState()
+    const [erro, setErro] = useState()
     const token = localStorage.getItem("token")
+    const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         const post = {
           title: title
         }
-
+      
         await api.post("http://localhost:5000/dashboard/createpost", post, {
           headers: {
-            "Content-Type" : "application/json",
-            "authorization" : `Bearer ${token}`
+          "Content-Type" : "application/json",
+          "authorization" : `Bearer ${token}`
           }
-        }).then(res => console.log(res.data))
-          .catch(err => console.log(err.response.data))
-
+        }).then(res => {
+        
+        setTitle(res.data.post)
+        navigate("/dashboard")
+        setErro("")
+        
+        }).catch(err => setErro(err.response.data.erro))
+    
     }
+
   return (
     <Container>
         <Titulo>Crie seu post</Titulo>
+        {erro&& 
+          <ErroContainer>
+            <Erro>{erro}</Erro>
+          </ErroContainer>}
         <Form onSubmit={handleSubmit}>
             <Label>
                 No que você está pensando?
