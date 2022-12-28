@@ -14,11 +14,8 @@ route.put("/dislikes/:id", auth, Controller.dislike)
 route.put("/undonedislike/:id", auth, Controller.undoneDislike)
 route.post("/post/comment/:id", auth, Controller.comments)
 route.get("/post/:id", auth, Controller.getPost)
-route.put("/likeoncomment/:id", auth, Controller.likeOnComment)
 route.get("/post/comment/:id", auth, Controller.getComment)
-route.put("/dislikeoncomment/:id", auth, Controller.dislikeOnComment)
-route.put("/unlikecomment/:id", auth, Controller.unlikeComment)
-route.put("/undislikecomment/:id", auth, Controller.undislikeComment)
-route.post("/post/comment/reply/:id", auth, Controller.addReply)
+route.delete("/post/delete/:id", auth, Controller.deletePost)
+route.get("/user", auth, Controller.getUser)
 
 module.exports = route

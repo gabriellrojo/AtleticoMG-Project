@@ -123,6 +123,25 @@ module.exports = class Controller {
         })
     }
 
+    static getUser = async (req, res) => {
+        const bearerToken = req.headers.authorization
+        const split = bearerToken.split(" ")
+        const token = split[1]
+        const decoded = jwt.verify(token, "secret")
+        const id = decoded.id
+
+        const user = await User.findById({_id: id})
+        if(!user){
+            res.status(401).json({"erro": "Usuário não encontrado"})
+            return
+        }
+        
+        res.status(201).json({
+            id: id
+        })
+
+    }
+    
     static dashboard = async (req, res) => {
       const bearerToken = req.headers.authorization
       const split = bearerToken.split(" ")
@@ -153,7 +172,7 @@ module.exports = class Controller {
         }
 
         if(title.length < 5){
-            res.status(422).json({"erro": "O titulo precisa ter no mínimo 3 caractéres"})
+            res.status(422).json({"erro": "O titulo precisa ter no mínimo 5 caractéres"})
             return
         }
 
@@ -392,155 +411,30 @@ module.exports = class Controller {
 
     }
 
-    static likeOnComment = async (req, res) => { 
+    static deletePost = async (req, res) => {
         const id = req.params.id
+        const post = await Post.findById({_id: id})
+        const postUId = post.userId
         const bearerToken = req.headers.authorization
         const split = bearerToken.split(" ")
         const token = split[1]
         const decoded = jwt.verify(token, "secret")
         const userId = decoded.id
+        const userIdS = userId.toString()
+        const postUIdS = postUId.toString()
 
-        const comment = await Comment.findById({_id: id})
-
-        if(!comment){
-            res.status(404).json({"erro": "Comentário não encontrado"})
+        if(!post){
+            res.status(404).json({"erro": "Post não encontrado"})
             return
         }
 
-        if(comment.dislikes.includes(userId)){
-            res.status(422).json({"erro": "Você precisa retirar o dislike para curtir"})
+        if(userIdS !== postUIdS){
+            res.status(422).json({"erro": "Ação não permitida"})
             return
         }
 
-        comment.likes.push(userId)
+        const deletePost = await Post.findByIdAndDelete({_id: id})
 
-        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
-
-        res.status(201).json({
-            updateComment: updateComment
-        })
+        res.status(201).json({"message": "Post excluído com sucesso"})
     }
-
-    static dislikeOnComment = async (req, res) => {
-        const id = req.params.id
-        
-        const bearerToken = req.headers.authorization
-        const split = bearerToken.split(" ")
-        const token = split[1]
-        const decoded = jwt.verify(token, "secret")
-        const userId = decoded.id
-
-        const comment = await Comment.findById({_id: id})
-
-        if(!comment){
-            res.status(404).json({"erro": "Comentário não encontrado"})
-            return
-        }
-
-        if(comment.likes.includes(userId)){
-            res.status(422).json({"erro": "Você precisa retirar o like para descurtir"})
-            return
-        }
-
-        comment.dislikes.push(userId)
-
-        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
-
-        res.status(201).json({
-            updateComment: updateComment
-        })
-    }
-
-    static unlikeComment = async (req, res) => {
-        const id = req.params.id
-
-        const bearerToken = req.headers.authorization
-        const split = bearerToken.split(" ")
-        const token = split[1]
-        const decoded = jwt.verify(token, "secret")
-        const userId = decoded.id
-
-        const comment = await Comment.findById({_id: id})
-
-        if(!comment){
-            res.status(404).json({"erro": "Comentário não encontrado"})
-            return
-        }
-
-        if(!comment.likes.includes(userId)){
-            res.status(422).json({"erro": "A postagem não foi curtida"})
-            return
-        }
-
-        comment.likes = comment.likes.filter(id => id !== userId)
-
-        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
-
-        res.status(201).json({
-            updateComment: updateComment
-        })
-    }
-
-    static undislikeComment =  async (req, res) => {
-        const id = req.params.id
-        
-        const bearerToken = req.headers.authorization
-        const split = bearerToken.split(" ")
-        const token = split[1]
-        const decoded = jwt.verify(token, "secret")
-        const userId = decoded.id
-
-        const comment = await Comment.findById({_id: id})
-
-        if(!comment){
-            res.status(404).json({"erro": "Comentário não encontrado"})
-            return
-        }
-
-        if(!comment.dislikes.includes(userId)){
-            res.status(422).json({"erro": "Você não descurtiu esse post"})
-            return
-        }
-
-        comment.dislikes = comment.dislikes.filter(id => id !== userId)
-
-        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
-
-        res.status(201).json({
-            updateComment: updateComment
-        })
-    }
-
-    static addReply = async (req, res) => {
-        const id = req.params.id
-        const reply = req.body.reply
-        const bearerToken = req.headers.authorization
-        const split = bearerToken.split(" ")
-        const token = split[1]
-        const decoded = jwt.verify(token, "secret")
-        const userId = decoded.id
-
-        const user = await User.findById({_id: userId})
-        const comment = await Comment.findById({_id: id})
-        const userName = user.name
-
-        if(!comment){
-            res.status(404).json({"erro": "Comentário não encontrado"})
-            return
-        }
-
-        const replyComment = {
-            name: userName,
-            reply: reply
-        }
-
-        comment.replies.push(replyComment)
-
-        const updateComment = await Comment.findByIdAndUpdate({_id: id}, {$set: comment}, {new: true})
-
-        res.status(201).json({
-            updateComment: updateComment
-        })  
-
-    } 
 }
