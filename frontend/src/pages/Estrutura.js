@@ -23,6 +23,10 @@ const Arena = styled.img`
     margin-bottom: 30px;
     padding-bottom: 35px;
     border-bottom: 1px solid black;
+    @media(min-width: 800px){
+        max-width: 700px;
+        max-height: 620px;
+    }
 `
 
 const Cidade = styled.img`
@@ -32,6 +36,10 @@ const Cidade = styled.img`
     margin-bottom: 30px;
     padding-bottom: 35px;
     border-bottom: 1px solid black;
+    @media(min-width: 800px){
+        max-width: 700px;
+        max-height: 620px;
+    }
 `
 
 const Sede = styled.img`
@@ -41,6 +49,10 @@ const Sede = styled.img`
     margin-bottom: 30px;
     padding-bottom: 35px;
     border-bottom: 1px solid black;
+    @media(min-width: 800px){
+        width: 700px;
+        height: 520px;
+    }
 `
 
 const Estrutura = () => {

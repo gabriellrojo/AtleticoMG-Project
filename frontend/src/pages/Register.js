@@ -52,6 +52,10 @@ const Btn = styled.input`
   border-radius: 10px;
   margin: 20px 0;
   font-size: 20px;
+  cursor: pointer;
+  @media(min-width: 800px){
+    min-width: 700px
+  }
 `
 
 const ErroContainer = styled.div`
@@ -64,6 +68,9 @@ const ErroContainer = styled.div`
   border-radius: 10px;
   margin-bottom: 55px;
   padding: 5px 20px;
+  @media(min-width: 800px){
+    min-width: 700px
+  }
   
 `
 const Erro = styled.p`

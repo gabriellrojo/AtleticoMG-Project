@@ -3,6 +3,12 @@
     height: 40px;
 }
 
+@media(min-width: 800px){
+    .menu {
+        display: none;
+    }
+}
+
 .links{
     margin-top: 10px;
     line-height: 80px;
@@ -12,3 +18,22 @@
     border-bottom: 1px solid rgb(63, 62, 62);
     padding-bottom: 15px;
 }
+
+@media(min-width: 800px){
+    .links {
+        display: none;
+    }
+}
+
+.iconDesk,
+.iconDesk2{
+    height: 25px;
+    color:rgb(63, 62, 62);
+    margin: 0 25px;
+}
+
+.iconDesk2{
+    margin-top: 12px;
+    margin-left: 13px;
+}
+

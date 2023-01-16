@@ -1,9 +1,10 @@
 .container{
-    position: fixed;
-    min-height: 50vh;
-    min-width: 50vw;
+    position: absolute;
+    height: 75vh;
+    max-width: 2600vw;
     display: flex;
     align-items: center;
     justify-content: center;
-    
+    cursor: grab;
 }
+

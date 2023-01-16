@@ -44,6 +44,9 @@ const Input = styled.input`
   color: whitesmoke;
   font-size: 20px;
   outline-color: ${props => props.theme.colors.bgfooterday};
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const Btn = styled.input`
@@ -52,6 +55,10 @@ const Btn = styled.input`
   border-radius: 10px;
   margin: 20px 0;
   font-size: 20px;
+  cursor: pointer;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const ErroContainer = styled.div`
@@ -64,6 +71,9 @@ const ErroContainer = styled.div`
   border-radius: 10px;
   margin-bottom: 55px;
   padding: 5px 20px;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
   
 `
 const Erro = styled.p`
@@ -104,6 +114,7 @@ const Login = () => {
       localStorage.setItem("name", userName)
       navigate("/dashboard")
     }
+
   }, [handleSubmit])
 
   return (

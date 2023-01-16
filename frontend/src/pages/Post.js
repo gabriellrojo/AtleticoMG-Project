@@ -27,6 +27,9 @@ const ContainerP = styled.div`
   flex-direction: column;
   align-items: flex-start;
   min-width: 330px;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const Titulo = styled.p`
@@ -58,6 +61,9 @@ const IconContainer = styled.div`
 
 const Comentarios = styled.p`
   font-size: 25px;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const ContainerC = styled.div`
@@ -65,6 +71,9 @@ const ContainerC = styled.div`
   flex-direction: column;
   margin-top: -20px;
   min-width: 330px;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const ContainerC2 = styled.div`
@@ -108,6 +117,9 @@ const Input = styled.input`
   color: whitesmoke;
   font-size: 20px;
   outline-color: ${props => props.theme.colors.bgfooterday};
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const Btn = styled.input`
@@ -116,6 +128,10 @@ const Btn = styled.input`
   border-radius: 10px;
   margin: 20px 0;
   font-size: 20px;
+  cursor: pointer;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const Frase = styled.p`
@@ -123,11 +139,15 @@ const Frase = styled.p`
   border-bottom: 1px solid whitesmoke;
   padding: 20px 0;
   padding-bottom: 30px;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const Post = () => {
   const [post, setPost] = useState()
   const [comment, setComment] = useState()
+  const [user, setUser] = useState()
   const idParams = useParams()
   const id = idParams.id
   const token = localStorage.getItem("token")
@@ -145,6 +165,15 @@ const Post = () => {
 
   }, [post])
 
+  useEffect(() => {
+    api.get("http://localhost:5000/user", {
+      headers: {
+        "authorization" : `Bearer ${token}`
+      }
+    }).then(res => setUser(res.data.id))
+      .catch(err => console.log(err.response.data.erro))
+  },[])
+
   const handleLike = async (id) => {
     await api.put(`http://localhost:5000/likes/${id}`, null, {
       headers: {
@@ -152,7 +181,6 @@ const Post = () => {
       }
     }).then(res => console.log(res.data.updatedPost))
       .catch(err => console.log(err.response.data.erro))
-    
   }
 
   const handleNoLike = async (id) => {
@@ -180,7 +208,7 @@ const Post = () => {
       }
     }).then(res => console.log(res.data.updatedPost))
       .catch(err => console.log(err.respose.data.erro))
-  }
+  }  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -207,16 +235,16 @@ const Post = () => {
           <Titulo>{post.title}</Titulo>
           <Autor>autor: {post.userName}</Autor>
           <LikesContainer>
-            {post.likes.includes(post.userId) ? 
+            {post.likes.includes(user) ? 
             (<IconContainer>
               <FontAwesomeIcon onClick={() => handleNoLike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-up"/> <p>{post.likes.length} likes</p>
             </IconContainer>) : 
             (<IconContainer>
               <FontAwesomeIcon onClick={() => handleLike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-up"/> <p>{post.likes.length} likes</p>
             </IconContainer>)}
-            {post.dislikes.includes(post.userId) ? 
+            {post.dislikes.includes(user) ? 
             (<IconContainer>
-              <FontAwesomeIcon onClick={() => handleNoDislike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-up"/> <p>{post.dislikes.length} dislikes</p>
+              <FontAwesomeIcon onClick={() => handleNoDislike(post._id)} className={styles.icone} icon="fa-solid fa-thumbs-down"/> <p>{post.dislikes.length} dislikes</p>
             </IconContainer>) :
             (<IconContainer>
               <FontAwesomeIcon onClick={() => handleDislike(post._id)} className={styles.icone} icon="fa-regular fa-thumbs-down"/> <p>{post.dislikes.length} dislikes</p>

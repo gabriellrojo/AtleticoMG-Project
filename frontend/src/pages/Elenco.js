@@ -2,6 +2,7 @@ import React from 'react'
 import styled from "styled-components"
 import brasil from "../assets/imgs/brazil.png"
 import argentina from "../assets/imgs/argentina.png"
+import chile from "../assets/imgs/chile.webp"
 
 const ContainerE = styled.div`
     min-height: 75vh;
@@ -31,6 +32,21 @@ const Celula = styled.td`
     border: 1px solid black;
     min-width: 95px;
     height: 80px;
+    @media(min-width: 800px){
+        min-width: 240px;
+        height: 90px;
+    }
+`
+
+const Celula1 = styled.td`
+    border: 1px solid black;
+    min-width: 95px;
+    height: 80px;
+    font-weight: bold;
+    @media(min-width: 800px){
+        min-width: 240px;
+        height: 90px;
+    }
 `
 
 const Flag = styled.img`
@@ -45,10 +61,10 @@ const Elenco = () => {
         <Titulo>O nosso time é imortal!</Titulo>
         <Table>
             <Linha>
-                <Celula>Nacionalidade</Celula>
-                <Celula>Nome</Celula>
-                <Celula>Nascimento</Celula>
-                <Celula>Posição</Celula>
+                <Celula1>Nacionalidade</Celula1>
+                <Celula1>Nome</Celula1>
+                <Celula1>Nascimento</Celula1>
+                <Celula1>Posição</Celula1>
             </Linha>
             <Linha>
                 <Celula><Flag src={brasil} alt="Brasil"/></Celula>
@@ -58,8 +74,8 @@ const Elenco = () => {
             </Linha>
             <Linha>
                 <Celula><Flag src={brasil} alt="Brasil"/></Celula>
-                <Celula>Gilberto</Celula>
-                <Celula>07/03/93</Celula>
+                <Celula>Mariano</Celula>
+                <Celula>23/06/86</Celula>
                 <Celula>Lateral Direito</Celula>
             </Linha>
             <Linha>
@@ -99,9 +115,9 @@ const Elenco = () => {
                 <Celula>Meia</Celula>
             </Linha>
             <Linha>
-                <Celula><Flag src={argentina} alt="Argentina"/></Celula>
-                <Celula>Nacho Fernandez</Celula>
-                <Celula>12/01/90</Celula>
+                <Celula><Flag src={brasil} alt="Argentina"/></Celula>
+                <Celula>Patrick</Celula>
+                <Celula>29/07/92</Celula>
                 <Celula>Meia</Celula>
             </Linha>
             <Linha>
@@ -115,6 +131,30 @@ const Elenco = () => {
                 <Celula>Hulk</Celula>
                 <Celula>25/07/87</Celula>
                 <Celula>Atacante</Celula>
+            </Linha>
+            <Linha>
+                <Celula><Flag src={chile} alt="Chile"/></Celula>
+                <Celula>Eduardo Vargas</Celula>
+                <Celula>20/11/89</Celula>
+                <Celula>Atacante</Celula>
+            </Linha>
+            <Linha>
+                <Celula><Flag src={argentina} alt="Argentina"/></Celula>
+                <Celula>Pavón</Celula>
+                <Celula>21/01/96</Celula>
+                <Celula>Atacante</Celula>
+            </Linha>
+            <Linha>
+                <Celula><Flag src={brasil} alt="Brasil"/></Celula>
+                <Celula>Otávio</Celula>
+                <Celula>04/05/94</Celula>
+                <Celula>Volante</Celula>
+            </Linha>
+            <Linha>
+                <Celula><Flag src={brasil} alt="Brasil"/></Celula>
+                <Celula>Rubens</Celula>
+                <Celula>21/06/01</Celula>
+                <Celula>Meia/Lateral</Celula>
             </Linha>
             <Linha>
                 <Celula><Flag src={argentina} alt="Argentina"/></Celula>

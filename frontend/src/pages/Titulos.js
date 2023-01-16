@@ -38,12 +38,29 @@ const Celula = styled.td`
     border: 1px solid black;
     min-width: 95px;
     height: 80px;
+    @media(min-width: 800px){
+        min-width: 240px;
+        height: 90px;
+    }
+
+`
+
+const Celula1 = styled.td`
+    border: 1px solid black;
+    min-width: 95px;
+    height: 80px;
+    font-weight: bold;
+    @media(min-width: 800px){
+        min-width: 240px;
+        height: 90px;
+    }
 
 `
 
 const Coroa = styled.img`
     max-width: 50px;
     min-height: 50px;
+    
 `
 
 const Libertadores = styled.img`
@@ -91,10 +108,10 @@ const Titulos = () => {
         <Titulo>Se houver uma camisa preta e branca...</Titulo>
         <Table>
             <Linha>
-                <Celula></Celula>
-                <Celula>Competição</Celula>
-                <Celula>Título</Celula>
-                <Celula>Temporada</Celula>
+                <Celula1></Celula1>
+                <Celula1>Competição</Celula1>
+                <Celula1>Título</Celula1>
+                <Celula1>Temporada</Celula1>
             </Linha>
             <Linha>
                 <Celula><Coroa src={coroa} alt="Tríplice Coroa"/></Celula>

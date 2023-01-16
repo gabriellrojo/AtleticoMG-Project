@@ -1,10 +1,14 @@
 import React from 'react'
 import styled from "styled-components"
-import { Navigate, NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import escudo from "../assets/imgs/atleticomg.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import styles from "./Header.module.css"
+library.add(fas)
+library.add(far)
 
 const Head = styled.div`
     min-height: 10vh;
@@ -38,6 +42,9 @@ const Navigation = styled.nav`
     border-bottom-left-radius: 10px;
     background-color: #e0e0e0;
     opacity: 0.9;
+    @media(min-width: 800px){
+        display: none
+    }
 
 `
 
@@ -49,6 +56,21 @@ const Logout = styled.p`
     color: black;
     border-bottom: 1px solid rgb(63, 62, 62);
     padding-bottom: 15px;
+`
+
+const Logout2 = styled.p`
+    cursor: pointer;
+`
+
+const NavigationDesk = styled.nav`
+    @media(max-width: 800px){
+        display: none
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    
 `
 
 const Header = () => {
@@ -79,7 +101,7 @@ const Header = () => {
   return (
     <Head>
         <ImgEscudoNav src={escudo} alt="Escudo do Clube Atlético Mineiro" />
-        <FontAwesomeIcon onClick={handleClick} className={styles.menu} icon={faBars} />
+        <FontAwesomeIcon onClick={handleClick} className={styles.menu} icon="fa-solid fa-bars" />
         <Navigation onClick={handleClick}>
             <NavLink className={styles.links} to="/">Home</NavLink>
             <NavLink className={styles.links} to="/historia">História</NavLink>
@@ -91,6 +113,17 @@ const Header = () => {
             {token&& <NavLink className={styles.links} to="/dashboard">Dashboard</NavLink>}
             {token&& <Logout onClick={logout}>Logout</Logout>}
         </Navigation>
+        <NavigationDesk>
+            <NavLink to="/"><FontAwesomeIcon className={styles.iconDesk} icon="fa-solid fa-home"/></NavLink>
+            <NavLink to="/historia"><FontAwesomeIcon className={styles.iconDesk}  icon="fa-solid fa-book" /></NavLink>
+            <NavLink to="/titulos"><FontAwesomeIcon className={styles.iconDesk}  icon="fa-solid fa-trophy"/></NavLink>
+            <NavLink to="/estrutura"><FontAwesomeIcon className={styles.iconDesk}  icon="fa-solid fa-building"/></NavLink>
+            <NavLink to="/elenco"><FontAwesomeIcon className={styles.iconDesk}  icon="fa-solid fa-futbol"/></NavLink>
+            {!token&& <NavLink to="/login"><FontAwesomeIcon className={styles.iconDesk}  icon="fa-solid fa-user" /></NavLink>}
+            {token&& <NavLink to="/dashboard"><FontAwesomeIcon className={styles.iconDesk}  icon="fa-solid fa-user" /></NavLink>}
+            {token&& <NavLink to="/forum"><FontAwesomeIcon className={styles.iconDesk} icon="fa-solid fa-file-pen" /></NavLink>}
+            {token&& <Logout2 onClick={logout}><FontAwesomeIcon icon="fa-solid fa-right-from-bracket" className={styles.iconDesk2} /></Logout2>}
+        </NavigationDesk>
     </Head>
   )
 }

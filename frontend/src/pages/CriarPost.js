@@ -44,6 +44,9 @@ const Input = styled.input`
   color: whitesmoke;
   font-size: 20px;
   outline-color: ${props => props.theme.colors.bgfooterday};
+  @media(min-width: 800px){
+    width: 700px;
+  }
 `
 
 const Btn = styled.input`
@@ -64,6 +67,10 @@ const ErroContainer = styled.div`
   border-radius: 10px;
   margin-bottom: 55px;
   padding: 5px 20px;
+  @media(min-width: 800px){
+    min-width: 700px;
+    min-height: 10vh;
+  }
   
 `
 const Erro = styled.p`

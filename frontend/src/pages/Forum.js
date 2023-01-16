@@ -38,6 +38,9 @@ const ContainerP = styled.div`
   align-items: flex-start;
   border-bottom: 1px solid whitesmoke;
   min-width: 330px;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const TituloP = styled.p`

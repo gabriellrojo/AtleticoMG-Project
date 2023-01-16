@@ -41,6 +41,9 @@ const ContainerP = styled.div`
   border-bottom: 1px solid whitesmoke;
   min-width: 330px;
   padding-bottom: 25px;
+  @media(min-width: 800px){
+    min-width: 700px;
+  }
 `
 
 const TituloP = styled.p`
@@ -67,6 +70,7 @@ const ExcluirContainer = styled.div`
   justify-content: center;
   margin-right: 20px;
   margin-top: -18px;
+  cursor: pointer;
 `
 
 const IconContainer = styled.div`
