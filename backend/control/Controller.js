@@ -377,6 +377,11 @@ module.exports = class Controller {
         const userId = decoded.id
         const user = await User.findById({_id: userId})
 
+        if(!comment){
+            res.status(420).json({"erro": "Você não pode enviar um comentário não preenchido"})
+            return
+        }
+
         const novoComment = new Comment({
             name: user.name,
             userId: userId,
