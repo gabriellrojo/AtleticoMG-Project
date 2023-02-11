@@ -16,5 +16,6 @@ Projeto fullstack de um site para o Atlético/MG com área para interação entr
 - validação de senha; 
 - middlewares de validação via auth para uso de partes específicas do sistema por usuários; 
 - aplicação da arquitetura MVC; 
-- utilização da lib styled-components visando a integração total do front-end.
+- utilização da lib styled-components visando a integração total do front-end;
+- responsividade.
 
